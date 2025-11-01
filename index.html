@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSA – Colegio San Agustin Makati</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- Tailwind CSS CDN (for Registrar & Home) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ==============================
+       GLOBAL STYLES (Jobs & Home)
+       ============================== -->
+  <style>
+    :root {
+      --primary: #c8102e;
+      --secondary: #a00f26;
+      --light: #f9fafb;
+      --dark: #1f2937;
+      --card-bg: rgba(255, 255, 255, 0.9);
+    }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    body {font-family:'Segoe UI',sans-serif; background:linear-gradient(to right,#f8f8f8,#fff); color:var(--dark); line-height:1.6;}
+    header {background:var(--primary); color:#fff; padding:1rem 0; box-shadow:0 2px 8px rgba(0,0,0,.2);}
+    header .container {width:90%; max-width:1200px; margin:auto; display:flex; justify-content:space-between; align-items:center;}
+    .logo-container {display:flex; align-items:center; gap:1rem;}
+    .logo-img {height:50px; width:auto; object-fit:contain;}
+    .logo {font-size:1.8rem; font-weight:700; letter-spacing:1px;}
+    nav ul {list-style:none; display:flex; gap:1.5rem;}
+    nav a {color:#fff; text-decoration:none; font-weight:500; transition:opacity .3s;}
+    nav a:hover {opacity:.8;}
+    main {width:90%; max-width:1200px; margin:2rem auto; display:flex; flex-wrap:wrap; gap:30px;}
+    aside {flex:1; max-width:280px; background:#fff; padding:1.5rem; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,.1); height:fit-content;}
+    aside h2 {margin-bottom:1rem; color:var(--primary);}
+    .filter-group {margin-bottom:1rem;}
+    .filter-group label {font-weight:bold; display:block; margin-bottom:.5rem;}
+    .filter-group input,.filter-group select {width:100%; padding:8px; border:1px solid #ccc; border-radius:5px; font-size:1rem;}
+    section.job-listings {flex:3;}
+    section.job-listings h2 {color:var(--primary); margin-bottom:1.5rem;}
+    .job-card {background:var(--card-bg); padding:20px; border-radius:12px; box-shadow:0 3px 8px rgba(0,0,0,.1); margin-bottom:20px; display:flex; justify-content:space-between; align-items:flex-start; transition:transform .3s,box-shadow .3s;}
+    .job-card:hover {transform:translateY(-5px); box-shadow:0 5px 15px rgba(0,0,0,.15);}
+    .job-card h3 {color:var(--secondary);}
+    .job-meta {font-size:.9rem; color:#666; margin:8px 0;}
+    .job-meta span {margin-right:12px;}
+    .job-buttons {display:flex; gap:10px; align-items:center;}
+    .apply-btn,.view-btn {background:var(--primary); color:#fff; text-decoration:none; padding:10px 20px; border-radius:6px; transition:background .3s; white-space:nowrap;}
+    .apply-btn:hover,.view-btn:hover {background:var(--secondary);}
+    .lightbox {position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.6); display:none; justify-content:center; align-items:center; z-index:1000;}
+    .lightbox-content {background:#fff; padding:30px; border-radius:10px; width:90%; max-width:600px; box-shadow:0 8px 20px rgba(0,0,0,.2); position:relative; animation:fadeIn .3s ease;}
+    @keyframes fadeIn {from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+    .lightbox-close {position:absolute; top:15px; right:15px; background:var(--primary); color:#fff; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;}
+    @media(max-width:768px){
+      main{flex-direction:column;}
+      aside{max-width:100%;}
+      .job-card{flex-direction:column; align-items:flex-start;}
+      .job-buttons{margin-top:10px; flex-direction:column; align-items:flex-start; gap:8px;}
+      .logo-img{height:40px;}
+      header .logo{font-size:1.5rem;}
+      nav ul{gap:1rem;}
+      nav a{font-size:.9rem;}
+    }
+    @media(max-width:480px){
+      .logo-container{flex-direction:column; align-items:flex-start;}
+      .logo-img{height:35px;}
+      header .logo{font-size:1.3rem;}
+    }
+  </style>
+
+  <!-- ==============================
+       ADMISSIONS PAGE STYLES
+       ============================== -->
+  <style>
+    .admissions-body {font-family:Arial,sans-serif; line-height:1.6; margin:0; padding:20px; color:#333; background:#f9f9f9;}
+    .admissions-header {background:#E34234; color:#fff; text-align:center; padding:1.5rem; border-radius:8px; margin-bottom:20px; box-shadow:0 2px 4px rgba(0,0,0,.1);}
+    .admissions-h1,.admissions-h2,.admissions-h3 {color:#800000;}
+    .admissions-h2 {border-bottom:2px solid #3498db; padding-bottom:10px;}
+    .admissions-section {margin-bottom:40px; padding:20px; background:#fff; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,.1); max-width:900px; margin:20px auto;}
+    .step {margin-bottom:30px; padding:15px; border-left:4px solid #3498db; background:#ecf0f1;}
+    .emoji {font-size:1.5em; margin-right:10px; vertical-align:middle;}
+    .policy-section {margin-bottom:20px; padding:15px; border:1px solid #bdc3c7; border-radius:5px; background:#fdfdfd;}
+    #step-one {text-align:center; font-style:italic;}
+
+    .carousel {position:relative; max-width:900px; margin:0 auto; overflow:hidden; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.1);}
+    .carousel img {width:100%; height:500px; object-fit:cover; display:none; border-radius:10px; transition:opacity .5s ease-in-out;}
+    .carousel img.active {display:block; opacity:1;}
+    .carousel img:not(.active){opacity:0; position:absolute; top:0; left:0;}
+    .carousel-buttons {position:absolute; top:50%; width:100%; display:flex; justify-content:space-between; transform:translateY(-50%);}
+    .carousel button {background:rgba(0,0,0,.5); border:none; color:#fff; font-size:24px; padding:10px 15px; cursor:pointer; border-radius:50%;}
+    .carousel button:hover {background:rgba(0,0,0,.8);}
+
+    .accordion,.admissions-policy .policy-item {margin-bottom:10px; border:1px solid #ddd; border-radius:5px; overflow:hidden;}
+    .accordion-header,.policy-header {background:#f0f0f0; color:#333; padding:10px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;}
+    .accordion-header:hover,.policy-header:hover {background:#e0e0e0;}
+    .accordion-content,.policy-content {padding:10px; display:none; background:#f9f9f9;}
+    .accordion-item.active .accordion-content,.policy-item.active .policy-content {display:block;}
+    .policy-item.as-catholic-school .policy-header,
+    .policy-item.as-school-for-student-leaders .policy-header,
+    .policy-item.as-basic-education-and-accredited-school .policy-header,
+    .policy-item.admission-to-csa-makati-is-conditional .policy-header {background:#e74c3c; color:#fff;}
+
+    .photo-gallery {display:flex; justify-content:space-between; max-width:900px; margin:20px auto; flex-wrap:wrap; gap:10px;}
+    .photo-gallery img {width:23%; height:200px; object-fit:cover; border-radius:10px; box-shadow:0 2px 4px rgba(0,0,0,.1); cursor:pointer; transition:transform .3s ease;}
+    .photo-gallery img:hover {transform:scale(1.05);}
+    .modal {display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,.8); justify-content:center; align-items:center;}
+    .modal img {max-width:90%; max-height:90%; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,.2);}
+    .modal-close {position:absolute; top:20px; right:30px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer;}
+
+    @media(max-width:768px){
+      .admissions-body{padding:10px;}
+      .step{padding:10px;}
+      .carousel img{height:300px;}
+    }
+  </style>
+
+  <!-- ==============================
+       REGISTRAR & HOME PAGE STYLES 
+       ============================== -->
+  <style>
+    html { scroll-behavior: smooth; }
+
+    .faq-answer { max-height:0; overflow:hidden; transition:max-height .3s ease-in-out,padding .3s ease; padding:0 1rem; }
+    .faq-answer.active { max-height:500px; padding:1rem; }
+
+    .quick-links { background:#fff; padding:1rem; border-radius:.5rem; box-shadow:0 4px 6px rgba(0,0,0,.1); height:fit-content; }
+    .quick-links h3 { font-size:1.125rem; margin-bottom:.5rem; font-weight:bold; color:#b91c1c; }
+    .link-item { margin-bottom:1rem; }
+    .link-item a { font-weight:bold; color:#000; text-decoration:none; display:block; margin-bottom:.5rem; }
+    .link-item a:hover { color:#b91c1c; }
+    .link-item img { width:100%; border-radius:.375rem; cursor:pointer; transition:opacity .2s; }
+    .link-item img:hover { opacity:.9; }
+
+    .lightbox { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.8); z-index:1000; justify-content:center; align-items:center; padding:1rem; }
+    .lightbox.open { display:flex; }
+    .lightbox-content { background:#fff; max-width:90%; max-height:85vh; overflow-y:auto; padding:2rem; border-radius:.5rem; position:relative; box-shadow:0 4px 8px rgba(0,0,0,.2); }
+    .lightbox-close { position:absolute; top:10px; right:15px; font-size:1.8rem; font-weight:bold; cursor:pointer; color:#333; width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:50%; transition:all .2s; }
+    .lightbox-close:hover,.lightbox-close:focus { color:#b91c1c; background:rgba(185,28,28,.1); }
+    .lightbox-image { max-width:100%; max-height:70vh; display:block; margin:0 auto; border-radius:.375rem; }
+
+    @media(max-width:640px){
+      .lightbox-content{max-width:95%;padding:1.5rem;}
+      .lightbox-close{top:8px;right:8px;font-size:1.5rem;}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ====================== COMMON HEADER ====================== -->
+  <header>
+    <div class="container">
+      <div class="logo-container">
+        <img src="Image/image20.png" alt="Colegio San Agustin Logo" class="logo-img">
+        <div class="logo">Colegio San Agustin</div>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#" id="nav-home">Home</a></li>
+          <li><a href="#" id="nav-admissions">Admissions</a></li>
+          <li><a href="#" id="nav-registrar">Registrar</a></li>
+          <li><a href="#" id="nav-jobs">Jobs</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ====================== HOME PAGE ====================== -->
+  <div id="home-page" class="page">
+    <div class="bg-gradient-to-b from-red-700 to-red-900 text-white py-16 px-6">
+      <div class="container mx-auto max-w-5xl text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+          Welcome to <span class="text-yellow-300">Colegio San Agustin Makati</span>
+        </h1>
+        <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto">
+          A Catholic Augustinian school forming student leaders with faith, excellence, and service.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="#" id="hero-admissions" class="bg-white text-red-700 font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition shadow-lg">
+            Apply Now
+          </a>
+          <a href="#" id="hero-registrar" class="border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-red-700 transition">
+            Student Portal
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Links Section -->
+    <section class="container mx-auto px-6 py-12">
+      <h2 class="text-3xl font-bold text-center text-red-700 mb-10">Explore Our Services</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <a href="#" id="card-admissions" class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition transform hover:-translate-y-2">
+          <div class="bg-red-700 text-white p-6 text-center">
+            <i class="fas fa-graduation-cap text-4xl mb-3"></i>
+            <h3 class="text-xl font-bold">Admissions</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-700">Start your journey with CSA Makati. Apply online and join our Augustinian family.</p>
+          </div>
+        </a>
+
+        <a href="#" id="card-registrar" class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition transform hover:-translate-y-2">
+          <div class="bg-red-700 text-white p-6 text-center">
+            <i class="fas fa-file-alt text-4xl mb-3"></i>
+            <h3 class="text-xl font-bold">Registrar</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-700">Access enrollment, records, certifications, and student services.</p>
+          </div>
+        </a>
+
+        <a href="#" id="card-jobs" class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition transform hover:-translate-y-2">
+          <div class="bg-red-700 text-white p-6 text-center">
+            <i class="fas fa-briefcase text-4xl mb-3"></i>
+            <h3 class="text-xl font-bold">Careers</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-700">Join our team. View current job openings and grow with CSA.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Announcements -->
+    <section class="bg-gray-100 py-12 px-6">
+      <div class="container mx-auto max-w-5xl">
+        <h2 class="text-3xl font-bold text-center text-red-700 mb-8">Latest Announcements</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
+            <p class="text-sm text-gray-500 mb-2">June 24, 2025</p>
+            <h3 class="font-bold text-lg text-red-700">Enrollment for SY 2025–2026 Now Open</h3>
+            <p class="text-gray-700 mt-2">New and old students can now enroll online via the CSA Portal.</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
+            <p class="text-sm text-gray-500 mb-2">March 8, 2025</p>
+            <h3 class="font-bold text-lg text-red-700">ESC & SHS VP Applications Open</h3>
+            <p class="text-gray-700 mt-2">Apply for financial assistance programs before the deadline.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Campus Highlights -->
+    <section class="container mx-auto px-6 py-12">
+      <h2 class="text-3xl font-bold text-center text-red-700 mb-10">Campus Highlights</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="relative overflow-hidden rounded-lg shadow-lg group">
+          <img src="Image/image1.png" alt="School Event" class="w-full h-48 object-cover group-hover:scale-110 transition duration-300">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+            <p class="text-white font-semibold">Intrams 2025</p>
+          </div>
+        </div>
+        <div class="relative overflow-hidden rounded-lg shadow-lg group">
+          <img src="Image/image8.png" alt="Graduation" class="w-full h-48 object-cover group-hover:scale-110 transition duration-300">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+            <p class="text-white font-semibold">Graduation Rites</p>
+          </div>
+        </div>
+        <div class="relative overflow-hidden rounded-lg shadow-lg group">
+          <img src="Image/image5.png" alt="Prayer" class="w-full h-48 object-cover group-hover:scale-110 transition duration-300">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+            <p class="text-white font-semibold">Morning Assembly</p>
+          </div>
+        </div>
+        <div class="relative overflow-hidden rounded-lg shadow-lg group">
+          <img src="Image/image9.png" alt="Sports" class="w-full h-48 object-cover group-hover:scale-110 transition duration-300">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+            <p class="text-white font-semibold">Champions</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ====================== JOBS PAGE ====================== -->
+  <div id="jobs-page" class="page" style="display:none;">
+    <main>
+      <aside>
+        <h2>Filter Jobs</h2>
+        <div class="filter-group">
+          <label for="job-title-filter">Job Title</label>
+          <input type="text" id="job-title-filter" placeholder="e.g., Teacher">
+        </div>
+        <div class="filter-group">
+          <label for="location-filter">Location</label>
+          <input type="text" id="location-filter" placeholder="e.g., Makati">
+        </div>
+        <div class="filter-group">
+          <label for="department-filter">Department</label>
+          <select id="department-filter">
+            <option value="">All Departments</option>
+            <option value="Education">Education</option>
+            <option value="Marketing">Marketing</option>
+            <option value="IT">IT</option>
+            <option value="Finance">Finance</option>
+          </select>
+        </div>
+      </aside>
+
+      <section class="job-listings">
+        <h2>Current Openings</h2>
+        <div id="job-list-container"></div>
+        <p id="no-jobs-message" style="display:none;">No jobs found matching your criteria.</p>
+      </section>
+    </main>
+
+    <div class="lightbox" id="jobLightbox">
+      <div class="lightbox-content">
+        <button class="lightbox-close" aria-label="Close">×</button>
+        <h2 id="lightboxTitle"></h2>
+        <p id="lightboxDetails"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================== ADMISSIONS PAGE ====================== -->
+  <div id="admissions-page" class="page" style="display:none;">
+    <div class="admissions-body">
+
+      <section id="about" class="admissions-section" aria-labelledby="about-heading">
+        <h2 id="about-heading" class="admissions-h2">About Admissions</h2>
+        <p>
+          The Admissions Office of Colegio San Agustin Makati is the welcoming gateway for students and families seeking quality Catholic education.
+          We are committed to guiding applicants through a smooth and transparent admissions process, beginning with online application and document
+          submission, followed by entrance testing and evaluation. Our team ensures each applicant is fairly assessed based on academic performance,
+          conduct, and alignment with Augustinian values. We support families at every stage, from inquiry to enrollment, promoting a nurturing and
+          faith-driven environment where students grow intellectually, morally, and spiritually. Your journey with CSA Makati starts here.
+        </p>
+      </section>
+
+      <div class="carousel" role="region" aria-label="School Activities Carousel">
+        <img src="Image/image1.png" class="active" alt="Students cheering in the gym">
+        <img src="Image/image2.png" alt="Mass ceremony at the church">
+        <img src="Image/image3.png" alt="Basketball team huddle">
+        <img src="Image/image4.png" alt="School campus">
+        <img src="Image/image5.png" alt="Students praying at assembly">
+        <img src="Image/image6.png" alt="Blessing Ceremony">
+        <img src="Image/image7.png" alt="Students in classroom">
+        <img src="Image/image8.png" alt="Graduation Ceremony">
+        <img src="Image/image9.png" alt="Basketball Achievement">
+        <img src="Image/image10.png" alt="Volleyball Achievement">
+        <div class="carousel-buttons">
+          <button class="prev" aria-label="Previous image">←</button>
+            <button class="next" aria-label="Next image">→</button>
+        </div>
+      </div>
+
+      <section id="process" class="admissions-section" aria-labelledby="process-heading">
+        <h2 id="process-heading" class="admissions-h2">Admission Process</h2>
+        <div class="steps-container">
+          <div class="step" id="step-one"><span class="emoji"aria-hidden="true">📝<h3>Step 1: Application Form</h3><p>Fill out the <strong>Student Application Admission Form</strong> (available at the bottom of this page). Click submit once completed. A notification will be sent to your email.<br><strong>Note:</strong> Telephone inquiries will not be entertained.</p></div>
+          <div class="step"><span class="emoji"aria-hidden="true">📤</span><h3><p>Scan and upload your documents via the Google Form link sent to your email. A confirmation will follow to proceed to Step 3.</p></div>
+          <div class="step"><span class="emoji"aria-hidden="true">💳</span><h3>Step 3: Admission Fee</h3><p>Pay ₱800 via DragonPay (link sent in the confirmation email) to proceed with the admission process.</p></div>
+          <div class="step"><span class="emoji"aria-hidden="true">✅</span><h3>Step 4: Confirmation</h3><p>Wait for the confirmation email from the Admissions Office regarding the status of your application.</p></div>
+        </div>
+      </section>
+
+      <div class="photo-gallery" role="region" aria-label="Admissions Photo Gallery">
+        <img src="Image/image12.png" alt="Admission" onclick="openModal(this.src, this.alt)">
+        <img src="Image/image13.png" alt="Onsite Screening" onclick="openModal(this.src, this.alt)">
+        <img src="Image/image14.png" alt="Onsite Testing" onclick="openModal(this.src, this.alt)">
+        <img src="Image/image15.png" alt="Requirements" onclick="openModal(this.src, this.alt)">
+      </div>
+
+      <div class="modal" id="imageModal" role="dialog" aria-label="Zoomed Image">
+        <span class="modal-close" onclick="closeModal()" aria-label="Close modal">×</span>
+        <img id="modalImage" alt="">
+      </div>
+
+      <section class="admissions-policy admissions-section" aria-labelledby="policy-heading">
+        <h2 id="policy-heading" class="admissions-h2">Admissions Policy</h2>
+        <div class="policy-item as-catholic-school">
+          <div class="policy-header" role="button" aria-expanded="false" aria-controls="catholic-school-content"><span>As a Catholic School</span><span aria-hidden="true">+</span></div>
+          <div class="policy-content" id="catholic-school-content"><p>As a Catholic school, CSA holds strongly to the Catholic faith and its practices, which must be complied with. Students and parents are expected to actively participate or express full support for the values espoused by the school.</p></div>
+        </div>
+        <div class="policy-item as-school-for-student-leaders">
+          <div class="policy-header" role="button" aria-expanded="false" aria-controls="student-leaders-content"><span>As a School for Student Leaders</span><span aria-hidden="true">+</span></div>
+          <div class="policy-content" id="student-leaders-content"><p>CSA fosters leadership qualities in students, encouraging them to take initiative and demonstrate responsibility. The school provides opportunities for students to develop leadership skills through various programs and activities.</p></div>
+        </div>
+        <div class="policy-item as-basic-education-and-accredited-school">
+          <div class="policy-header" role="button" aria-expanded="false" aria-controls="basic-education-content"><span>As a Basic Education and Accredited School</span><span aria-hidden="true">+</span></div>
+          <div class="policy-content" id="basic-education-content"><p>CSA is managed in accordance with government policies and conforms to national and international standards. Per DepEd Order No. 47, series of 2016, the school implements a cut-off age for incoming Nursery, Junior Kinder, Senior Kinder, and Grade 1 applicants. For Grade 11 STEM strand, per DepEd Order No. 55, series of 2016, a minimum final grade of 85 in both Science and Math in Grade 10 is required, along with a percentile rank of 86 or above in the STEM subtest of the career assessment exam.</p></div>
+        </div>
+        <div class="policy-item admission-to-csa-makati-is-conditional">
+          <div class="policy-header" role="button" aria-expanded="false" aria-controls="conditional-admission-content"><span>Admission to CSA Makati is Conditional</span><span aria-hidden="true">+</span></div>
+          <div class="policy-content" id="conditional-admission-content"><p>Admission to CSA Makati is conditional. The school reserves the right to refuse acceptance or re-admission to any student whose behavior or academic standing does not meet the school's standards. Students with special needs may apply, provided an official certification from a specialist detailing specific needs and interventions is submitted for proper accommodation.</p></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ====================== REGISTRAR PAGE ====================== -->
+  <div id="registrar-page" class="page" style="display:none;">
+    <main class="container mx-auto px-4 py-10">
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold text-red-700 mb-4">About the Registrar’s Office</h2>
+        <p class="mb-4 text-lg">
+          The Office of the Registrar at Colegio San Agustin Makati is responsible for maintaining accurate academic records and supporting students' academic progress. It manages student enrollment, grades, transcripts, and certification requests, ensuring that all records comply with institutional standards.
+        </p>
+        <p class="text-lg">
+          The office also facilitates the registration process, oversees graduation requirements, and assists with credential verification. Committed to delivering excellent service, the Registrar’s Office plays a vital role in student and faculty support by providing efficient administrative services and safeguarding academic integrity.
+        </p>
+      </section>
+
+      <section id="announcements" class="mb-8 grid md:grid-cols-4 gap-6">
+        <div class="md:col-span-3">
+          <h2 class="text-2xl font-bold text-red-700 mb-4">ANNOUNCEMENTS</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <a href="#" class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition block" data-lightbox="new-enrollment">
+              <img src="image/image18.png" alt="New Students Enrollment" class="rounded mb-3 w-full h-36 object-cover hover:opacity-90 transition">
+              <p class="text-sm text-gray-500 mb-1">June 24, 2025</p>
+              <h3 class="font-semibold text-lg">New Students Enrollment Process 2025–2026</h3>
+            </a>
+
+            <a href="#" class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition block" data-lightbox="old-enrollment">
+              <img src="image/image17.png" alt="Old Students Enrollment" class="rounded mb-3 w-full h-36 object-cover hover:opacity-90 transition">
+              <p class="text-sm text-gray-500 mb-1">June 24, 2025</p>
+              <h3 class="font-semibold text-lg">Old Students Enrollment Process 2025–2026</h3>
+            </a>
+
+            <a href="#" class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition block" data-lightbox="csa-esc">
+              <img src="image/image19.png" alt="CSA ESC Application" class="rounded mb-3 w-full h-36 object-cover hover:opacity-90 transition">
+              <p class="text-sm text-gray-500 mb-1">March 8, 2025</p>
+              <h3 class="font-semibold text-lg">CSA-ESC Application</h3>
+            </a>
+          </div>
+
+          <!-- FAQ Section -->
+          <section id="faq" class="mt-12">
+            <h2 class="text-2xl font-bold text-center mb-6 text-red-700">Frequently Asked Questions</h2>
+            <div class="max-w-3xl mx-auto space-y-4">
+
+              <div class="faq-item bg-white rounded-lg shadow overflow-hidden">
+                <button class="faq-question w-full bg-red-700 text-white text-left px-6 py-4 font-semibold hover:bg-red-800 transition flex justify-between items-center">
+                  Who can request a Certificate of Enrollment for a student?
+                  <span class="ml-4">+</span>
+                </button>
+                <div class="faq-answer bg-gray-50 text-gray-800 p-0">
+                  <p class="p-6">The certificate of enrollment may be requested online or onsite. To request online, send an email to <a href="mailto:registrar@csa.edu.ph" class="text-red-700 underline">registrar@csa.edu.ph</a> containing the complete name of the student, the name and relationship of the requesting party, and the purpose of the request. To request onsite (in-person), the requesting party will be asked to fill out a form. Turnaround time: 3–5 working days.</p>
+                </div>
+              </div>
+
+              <div class="faq-item bg-white rounded-lg shadow overflow-hidden">
+                <button class="faq-question w-full bg-red-700 text-white text-left px-6 py-4 font-semibold hover:bg-red-800 transition flex justify-between items-center">
+                  How can I apply for ESC or SHS VP?
+                  <span class="ml-4">+</span>
+                </button>
+                <div class="faq-answer bg-gray-50 text-gray-800 p-0">
+                  <p class="p-6">ESC and SHS VP are grant programs of PEAC or the Private Education Assistance Committee and the Department of Education or DepEd. For ESC, application is open only for incoming grade 7 students. Requirements include: Letter of Intent addressed to HS Principal, Fr. Julian C. Mazana, OSA, copy of final report card, 1x1 ID picture, proof of income of parents, and accomplished ESC application form. For SHS VP, application is through the PEAC OVAP website. SHS VP can only be applied by incoming grade 11 students or their parents. Please visit the website for details of deadlines and requirements. Successful applicants for SHS VP will be issued a QVA which must be submitted to the Registrar’s Office on or before <strong>July 30, 2025</strong>.</p>
+                </div>
+              </div>
+
+              <div class="faq-item bg-white rounded-lg shadow overflow-hidden">
+                <button class="faq-question w-full bg-red-700 text-white text-left px-6 py-4 font-semibold hover:bg-red-800 transition flex justify-between items-center">
+                  I lost my diploma/report card. Can I request for a new copy?
+                  <span class="ml-4">+</span>
+                </button>
+                <div class="faq-answer bg-gray-50 text-gray-800 p-0">
+                  <p class="p-6">A duplicate copy of lost records such as diploma or report card may be issued upon presentation of an affidavit of loss. Damaged records may be replaced upon submission of the original copies. Turnaround time: 7–10 working days.</p>
+                </div>
+              </div>
+
+              <div class="faq-item bg-white rounded-lg shadow overflow-hidden">
+                <button class="faq-question w-full bg-red-700 text-white text-left px-6 py-4 font-semibold hover:bg-red-800 transition flex justify-between items-center">
+                  How do I report the correction of my name?
+                  <span class="ml-4">+</span>
+                </button>
+                <div class="faq-answer bg-gray-50 text-gray-800 p-0">
+                  <p class="p-6">Parents may file a correction of the name of their children upon submission of the original PSA birth certificate. Depending on the case, the Registrar may also request other legal supporting documents.</p>
+                </div>
+              </div>
+
+              <div class="faq-item bg-white rounded-lg shadow overflow-hidden">
+                <button class="faq-question w-full bg-red-700 text-white text-left px-6 py-4 font-semibold hover:bg-red-800 transition flex justify-between items-center">
+                  Where can I find my Learner Reference Number (LRN)?
+                  <span class="ml-4">+</span>
+                </button>
+                <div class="faq-answer bg-gray-50 text-gray-800 p-0">
+                  <p class="p-6">The Learner Reference Number may be found on the upper left hand corner of the Report Card.</p>
+                </div>
+              </div>
+
+              <div class="faq-item bg-white rounded-lg shadow overflow-hidden">
+                <button class="faq-question w-full bg-red-700 text-white text-left px-6 py-4 font-semibold hover:bg-red-800 transition flex justify-between items-center">
+                  Can my school records be sent online?
+                  <span class="ml-4">+</span>
+                </button>
+                <div class="faq-answer bg-gray-50 text-gray-800 p-0">
+                  <p class="p-6">Not at the moment. We are still finding a more secure way of sending school records online.</p>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section id="team" class="mt-12 text-center">
+            <h2 class="text-2xl font-bold text-red-700 mb-6 uppercase tracking-wide">Meet the Team</h2>
+            <div class="flex justify-center mb-6">
+              <div class="bg-white shadow-md rounded-xl p-6 w-64 transform hover:scale-105 transition duration-300">
+                <img src="image/image24.jpg" alt="Mr. Julius Diongzon" class="w-24 h-24 rounded-full mx-auto mb-3 object-cover border-4 border-red-700">
+                <p class="font-semibold text-gray-800 text-lg">Mr. Julius Diongzon</p>
+                <p class="text-sm text-gray-600">Registrar</p>
+              </div>
+            </div>
+            <div class="flex flex-wrap justify-center gap-6">
+              <div class="bg-white shadow-md rounded-xl p-6 w-64 transform hover:scale-105 transition duration-300">
+                <img src="image/image23.png" alt="Ms. Rachel Camposano" class="w-24 h-24 rounded-full mx-auto mb-3 object-cover border-4 border-red-700">
+                <p class="font-semibold text-gray-800 text-lg">Ms. Rachel Camposano</p>
+                <p class="text-sm text-gray-600">Registrar Liaison</p>
+              </div>
+              <div class="bg-white shadow-md rounded-xl p-6 w-64 transform hover:scale-105 transition duration-300">
+                <img src="image/image21.png" alt="Mr. Marc Garcia" class="w-24 h-24 rounded-full mx-auto mb-3 object-cover border-4 border-red-700">
+                <p class="font-semibold text-gray-800 text-lg">Mr. Marc Garcia</p>
+                <p class="text-sm text-gray-600">Records Evaluator</p>
+              </div>
+              <div class="bg-white shadow-md rounded-xl p-6 w-64 transform hover:scale-105 transition duration-300">
+                <img src="image/image22.png" alt="Mr. Emman Montealto" class="w-24 h-24 rounded-full mx-auto mb-3 object-cover border-4 border-red-700">
+                <p class="font-semibold text-gray-800 text-lg">Mr. Emman Montealto</p>
+                <p class="text-sm text-gray-600">Foreign Services Unit In-charge</p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="quick-links">
+          <h3>Quick Links:</h3>
+          <div class="link-item">
+            <a href="end-of-year-rites.html">End of School Year Rites (2024–2025)</a>
+            <img src="image/image25.png" alt="End of School Year Rites" data-lightbox-image="image/image25.png" data-lightbox-title="End of School Year Rites 2024-2025">
+          </div>
+          <div class="link-item">
+            <a href="esc-grant.html">ESC Grant 2025</a>
+            <img src="image/image26.png" alt="ESC Grant 2025" data-lightbox-image="image/image26.png" data-lightbox-title="ESC Grant 2025">
+          </div>
+          <p class="text-sm mt-4">
+            <span class="font-semibold">Business Hours:</span><br>
+            Mondays–Fridays 7:30 AM–3:30 PM<br>
+            Email: <a href="mailto:registrar@csa.edu.ph" class="text-red-700 hover:underline">registrar@csa.edu.ph</a><br>
+            Tel: 899-10-100, 899-10-110
+          </p>
+        </aside>
+      </section>
+    </main>
+
+    <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightbox-title">
+      <div class="lightbox-content">
+        <button class="lightbox-close" aria-label="Close lightbox">×</button>
+        <div id="lightbox-inner"></div>
+      </div>
+    </div>
+
+    <footer class="bg-gray-900 text-gray-300 py-10 px-6 mt-16">
+      <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
+        <div>
+          <img src="image/image20.png" alt="Colegio San Agustin Logo" class="w-20 mx-auto md:mx-0 mb-3">
+          <h2 class="font-serif text-xl text-white mb-2">Colegio San Agustin</h2>
+          <p class="text-sm">Palm Ave, Dasmariñas Makati, Metro Manila</p>
+          <p class="text-sm italic mt-2">Anima una et cor unum in Deum</p>
+          <p class="text-xs mt-4 text-gray-500">©2025 Colegio San Agustin – ICT & Media Department</p>
+        </div>
+        <div>
+          <h3 class="text-white font-semibold mb-2">For Inquiries</h3>
+          <p>899-10-100</p>
+          <h3 class="text-white font-semibold mt-4 mb-2">Admissions:</h3>
+          <p>899-10-123</p>
+          <p>899-10-124</p>
+          <h3 class="text-white font-semibold mt-4 mb-2">Registrar:</h3>
+          <p>899-10-100</p>
+          <p>899-10-110</p>
+        </div>
+        <div>
+          <h3 class="text-white font-semibold mb-3">Website</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-red-500 transition">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-red-500 transition">Site Map</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-white font-semibold mb-3">Social Media</h3>
+          <ul class="space-y-2">
+            <li class="flex justify-center md:justify-start items-center gap-2">
+              <i class="fab fa-twitter text-red-500"></i>
+              <a href="#" class="hover:text-red-500 transition">Twitter</a>
+            </li>
+            <li class="flex justify-center md:justify-start items-center gap-2">
+              <i class="fab fa-facebook text-red-500"></i>
+              <a href="#" class="hover:text-red-500 transition">Facebook</a>
+            </li>
+            <li class="flex justify-center md:justify-start items-center gap-2">
+              <i class="fab fa-instagram text-red-500"></i>
+              <a href="#" class="hover:text-red-500 transition">Instagram</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ====================== SCRIPTS ====================== -->
+  <script>
+    /* ---------- PAGE SWITCHING ---------- */
+    const pages = {
+      home: document.getElementById('home-page'),
+      jobs: document.getElementById('jobs-page'),
+      admissions: document.getElementById('admissions-page'),
+      registrar: document.getElementById('registrar-page')
+    };
+    const navLinks = {
+      home: document.getElementById('nav-home'),
+      admissions: document.getElementById('nav-admissions'),
+      registrar: document.getElementById('nav-registrar'),
+      jobs: document.getElementById('nav-jobs')
+    };
+
+    function showPage(id) {
+      Object.values(pages).forEach(p => p.style.display = 'none');
+      pages[id].style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+
+    navLinks.home.addEventListener('click', e => { e.preventDefault(); showPage('home'); });
+    navLinks.admissions.addEventListener('click', e => { e.preventDefault(); showPage('admissions'); });
+    navLinks.jobs.addEventListener('click', e => { e.preventDefault(); showPage('jobs'); });
+    navLinks.registrar.addEventListener('click', e => { e.preventDefault(); showPage('registrar'); });
+
+    // Home page navigation from hero & cards
+    document.getElementById('hero-admissions').addEventListener('click', e => { e.preventDefault(); showPage('admissions'); });
+    document.getElementById('hero-registrar').addEventListener('click', e => { e.preventDefault(); showPage('registrar'); });
+    document.getElementById('card-admissions').addEventListener('click', e => { e.preventDefault(); showPage('admissions'); });
+    document.getElementById('card-registrar').addEventListener('click', e => { e.preventDefault(); showPage('registrar'); });
+    document.getElementById('card-jobs').addEventListener('click', e => { e.preventDefault(); showPage('jobs'); });
+
+    // Default page
+    showPage('home');
+
+    /* ---------- JOBS PAGE LOGIC ---------- */
+    const jobs = [
+      { title: 'Alternative Learning Support Teacher', company: 'Colegio San Agustin', location: 'Makati', department: 'Education', description: 'We are looking for an innovative and passionate teacher to assist in alternative learning programs.', applyLink: '#' },
+      { title: 'Marketing Specialist', company: 'Colegio San Agustin', location: 'Makati', department: 'Marketing', description: 'CSA seeks a creative Marketing Specialist to help in promoting school programs and activities.', applyLink: '#' },
+      { title: 'IT Support Staff', company: 'Colegio San Agustin', location: 'Makati', department: 'IT', description: 'Assist in maintaining computer systems, networks, and providing technical support for staff and students.', applyLink: '#' },
+      { title: 'Finance Assistant', company: 'Colegio San Agustin', location: 'Makati', department: 'Finance', description: 'Support the Finance Office in managing records, reports, and transactions with accuracy and efficiency.', applyLink: '#' },
+      { title: 'Guidance Counselor', company: 'Colegio San Agustin', location: 'Makati', department: 'Education', description: 'Provide student counseling, guidance, and emotional support services in the academic setting.', applyLink: '#' }
+    ];
+
+    const jobListContainer = document.getElementById('job-list-container');
+    const titleFilter = document.getElementById('job-title-filter');
+    const locationFilter = document.getElementById('location-filter');
+    const departmentFilter = document.getElementById('department-filter');
+    const noJobsMessage = document.getElementById('no-jobs-message');
+    const lightbox = document.getElementById('jobLightbox');
+    const lightboxTitle = document.getElementById('lightboxTitle');
+    const lightboxDetails = document.getElementById('lightboxDetails');
+    const closeBtn = document.querySelector('#jobLightbox .lightbox-close');
+
+    const displayJobs = (arr) => {
+      jobListContainer.innerHTML = '';
+      if (!arr.length) { noJobsMessage.style.display = 'block'; return; }
+      noJobsMessage.style.display = 'none';
+      arr.forEach(job => {
+        const card = document.createElement('div');
+        card.className = 'job-card';
+        card.innerHTML = `
+          <div>
+            <h3>${job.title}</h3>
+            <div class="job-meta">
+              <span><i class="fas fa-building"></i> ${job.company}</span>
+              <span><i class="fas fa-map-marker-alt"></i> ${job.location}</span>
+              <span><i class="fas fa-tags"></i> ${job.department}</span>
+            </div>
+            <p>${job.description.substring(0,80)}...</p>
+          </div>
+          <div class="job-buttons">
+            <a href="#" class="view-btn" data-title="${job.title}">View Details</a>
+            <a href="${job.applyLink}" class="apply-btn">Apply Now</a>
+          </div>`;
+        card.querySelector('.view-btn').addEventListener('click', e => { e.preventDefault(); openLightbox(job); });
+        jobListContainer.appendChild(card);
+      });
+    };
+
+    const openLightbox = job => {
+      lightboxTitle.textContent = job.title;
+      lightboxDetails.innerHTML = `
+        <strong>Company:</strong> ${job.company}<br>
+        <strong>Location:</strong> ${job.location}<br>
+        <strong>Department:</strong> ${job.department}<br><br>
+        ${job.description}<br><br>
+        <a href="${job.applyLink}" class="apply-btn">Apply Now</a>`;
+      lightbox.style.display = 'flex';
+    };
+
+    closeBtn.onclick = () => lightbox.style.display = 'none';
+    lightbox.onclick = e => { if (e.target === lightbox) lightbox.style.display = 'none'; };
+
+    const filterJobs = () => {
+      const t = titleFilter.value.toLowerCase().trim();
+      const l = locationFilter.value.toLowerCase().trim();
+      const d = departmentFilter.value;
+      const filtered = jobs.filter(j =>
+        j.title.toLowerCase().includes(t) &&
+        j.location.toLowerCase().includes(l) &&
+        (!d || j.department === d)
+      );
+      displayJobs(filtered);
+    };
+    titleFilter.addEventListener('input', filterJobs);
+    locationFilter.addEventListener('input', filterJobs);
+    departmentFilter.addEventListener('change', filterJobs);
+    displayJobs(jobs);
+
+    /* ---------- ADMISSIONS PAGE LOGIC ---------- */
+    const carouselImgs = document.querySelectorAll('.carousel img');
+    const prevBtn = document.querySelector('.carousel .prev');
+    const nextBtn = document.querySelector('.carousel .next');
+    let curIdx = 0;
+    const interval = 3000;
+    let carouselInt;
+
+    const showImg = i => {
+      carouselImgs.forEach((img, idx) => img.classList.toggle('active', idx === i));
+      curIdx = i;
+    };
+    const nextImg = () => showImg((curIdx + 1) % carouselImgs.length);
+    const prevImg = () => showImg((curIdx - 1 + carouselImgs.length) % carouselImgs.length);
+    const startCarousel = () => { clearInterval(carouselInt); carouselInt = setInterval(nextImg, interval); };
+    const stopCarousel = () => clearInterval(carouselInt);
+
+    showImg(0);
+    startCarousel();
+    prevBtn.onclick = () => { stopCarousel(); prevImg(); startCarousel(); };
+    nextBtn.onclick = () => { stopCarousel(); nextImg(); startCarousel(); };
+    document.querySelector('.carousel').addEventListener('mouseenter', stopCarousel);
+    document.querySelector('.carousel').addEventListener('mouseleave', startCarousel);
+
+    document.querySelectorAll('.policy-header').forEach(h => {
+      h.addEventListener('click', () => {
+        const item = h.parentElement;
+        const expanded = item.classList.toggle('active');
+        h.setAttribute('aria-expanded', expanded);
+      });
+    });
+
+    window.openModal = (src, alt) => {
+      const modal = document.getElementById('imageModal');
+      const img = document.getElementById('modalImage');
+      img.src = src; img.alt = alt;
+      modal.style.display = 'flex';
+    };
+    window.closeModal = () => document.getElementById('imageModal').style.display = 'none';
+    document.getElementById('imageModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    /* ---------- REGISTRAR PAGE LOGIC ---------- */
+    document.querySelectorAll('.faq-question').forEach(button => {
+      button.addEventListener('click', () => {
+        const answer = button.nextElementSibling;
+        answer.classList.toggle('active');
+      });
+    });
+
+    const regLightbox = document.getElementById('lightbox');
+    const regInner = document.getElementById('lightbox-inner');
+    const regClose = document.querySelector('#lightbox .lightbox-close');
+
+    const lightboxContent = {
+      'new-enrollment': `<h2 class="text-xl font-bold text-red-700 mb-4" id="lightbox-title">New Students Enrollment Process 2025-2026</h2>
+        <h3 class="text-lg font-semibold">Filipino Students</h3>
+        <ul class="list-disc pl-5 mb-4"><li>Original copy of Birth Certificate</li><li>Original copy of the Final Report Card</li><li>"Endorsement Slip for Enrollment" from Admissions Office</li></ul>
+        <h3 class="text-lg font-semibold mt-4">Foreign Students</h3>
+        <ul class="list-disc pl-5"><li>Original copy of Birth Certificate translated in English or with official English translation</li><li>Original copy of the Final Report Card</li><li>"Endorsement Slip for Enrollment" from Admissions Office</li><li>Original valid passport and visa</li><li>Original copy of ACR (if applicable)</li></ul>
+        <p class="text-sm mt-4">For inquiries, email registrar@csa.edu.ph or visit @csamakatiofficial</p>`,
+      'old-enrollment': `<h2 class="text-xl font-bold text-red-700 mb-4" id="lightbox-title">Old Students Enrollment Process 2025-2026</h2>
+        <p class="mb-4">Returning students must complete the re-enrollment process to secure their slot for the upcoming school year. Follow these steps:</p>
+        <ul class="list-disc pl-5 mb-4"><li>Log in to the CSA Student Portal using your credentials.</li><li>Complete the online re-enrollment form by June 30, 2025.</li><li>Submit proof of payment for the enrollment fee.</li><li>Ensure all outstanding balances from the previous year are settled.</li><li>Upload a scanned copy of your latest report card (if not already on file).</li></ul>
+        <p class="text-sm mt-4">For assistance, contact registrar@csa.edu.ph or call 899-10-100.</p>`,
+      'csa-esc': `<h2 class="text-xl font-bold text-red-700 mb-4" id="lightbox-title">CSA-ESC Application 2025</h2>
+        <p class="mb-4">The Education Service Contracting (ESC) program is available for incoming Grade 7 students. Application details:</p>
+        <ul class="list-disc pl-5 mb-4"><li>Letter of Intent addressed to HS Principal, Fr. Julian C. Mazana, OSA</li><li>Copy of final report card</li><li>1x1 ID picture</li><li>Proof of income of parents</li><li>Accomplished ESC application form (available at the Registrar’s Office)</li></ul>
+        <p class="text-sm mt-4">Deadline: July 15, 2025. Submit applications to the Registrar’s Office. For inquiries, email registrar@csa.edu.ph.</p>`
+    };
+
+    document.querySelectorAll('[data-lightbox]').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const key = link.getAttribute('data-lightbox');
+        regInner.innerHTML = lightboxContent[key];
+        regLightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        regClose.focus();
+      });
+    });
+
+    document.querySelectorAll('[data-lightbox-image]').forEach(img => {
+      img.addEventListener('click', e => {
+        e.stopPropagation();
+        const src = img.getAttribute('data-lightbox-image');
+        const title = img.getAttribute('data-lightbox-title');
+        regInner.innerHTML = `<h2 class="text-xl font-bold text-red-700 mb-4" id="lightbox-title">${title}</h2>
+                              <img src="${src}" alt="${title}" class="lightbox-image">`;
+        regLightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        regClose.focus();
+      });
+    });
+
+    const closeRegLightbox = () => {
+      regLightbox.classList.remove('open');
+      regInner.innerHTML = '';
+      document.body.style.overflow = '';
+    };
+    regClose.addEventListener('click', closeRegLightbox);
+    regLightbox.addEventListener('click', e => { if (e.target === regLightbox) closeRegLightbox(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && regLightbox.classList.contains('open')) closeRegLightbox(); });
+  </script>
+</body>
+</html>
